@@ -133,4 +133,25 @@ class FunSetSuite extends FunSuite {
       assert(!contains(s, 3), "Intersect3")
     }
   }
+
+  test("filter contains only filtered (x < 3) elements of a set"){
+    new TestSets {
+      val f1 = union(union(s1, s2), s3)
+      val s = filter(f1, x=> x < 3 )
+      assert(contains(s, 1), "Filter 1")
+      assert(contains(s, 2), "Filter 2")
+      assert(!contains(s, 3), "Filter 3")
+    }
+  }
+
+  test("filter contains only filtered  (x > 2) elements of a set"){
+    new TestSets {
+      val f1 = union(union(s1, s2), s3)
+      val s = filter(f1, x=> x > 2 )
+      assert(!contains(s, 1), "Filter 1")
+      assert(!contains(s, 2), "Filter 2")
+      assert(contains(s, 3), "Filter 3")
+    }
+  }
+
 }
