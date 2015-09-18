@@ -77,6 +77,11 @@ class FunSetSuite extends FunSuite {
     val s1 = singletonSet(1)
     val s2 = singletonSet(2)
     val s3 = singletonSet(3)
+
+
+    val u12 = union(s1, s2)
+    val u23 = union(s2, s3)
+    val u123 = union(u12, u23)
   }
 
   /**
@@ -114,9 +119,7 @@ class FunSetSuite extends FunSuite {
 
   test("intersect contains intersections of elements"){
     new TestSets {
-      val i1 = union(s1, s2)
-      val i2 = union(s2, s3)
-      val s = intersect(i1, i2)
+      val s = intersect(u12, u23)
       assert(!contains(s, 1), "Intersect 1")
       assert(contains(s, 2), "Intersect 2")
       assert(!contains(s, 3), "Intersect3")
@@ -125,9 +128,7 @@ class FunSetSuite extends FunSuite {
 
   test("diff contains difference of elements"){
     new TestSets {
-      val d1 = union(s1, s2)
-      val d2 = union(s2, s3)
-      val s = diff(d1, d2)
+      val s = diff(u12, u23)
       assert(contains(s, 1), "Intersect 1")
       assert(!contains(s, 2), "Intersect 2")
       assert(!contains(s, 3), "Intersect3")
@@ -136,20 +137,18 @@ class FunSetSuite extends FunSuite {
 
   test("filter contains only filtered (x < 3) elements of a set"){
     new TestSets {
-      val f1 = union(union(s1, s2), s3)
-      val s = filter(f1, x=> x < 3 )
+      val s = filter(u123, x=> x < 3 )
       assert(contains(s, 1), "Filter 1")
       assert(contains(s, 2), "Filter 2")
       assert(!contains(s, 3), "Filter 3")
     }
   }
 
-  test("filter contains only filtered  (x > 2) elements of a set"){
+  test("filter contains only filtered  (x => 2) elements of a set"){
     new TestSets {
-      val f1 = union(union(s1, s2), s3)
-      val s = filter(f1, x=> x > 2 )
+      val s = filter(u123, x => x >= 2 )
       assert(!contains(s, 1), "Filter 1")
-      assert(!contains(s, 2), "Filter 2")
+      assert(contains(s, 2), "Filter 2")
       assert(contains(s, 3), "Filter 3")
     }
   }
