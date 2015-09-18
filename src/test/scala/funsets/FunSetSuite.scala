@@ -77,11 +77,12 @@ class FunSetSuite extends FunSuite {
     val s1 = singletonSet(1)
     val s2 = singletonSet(2)
     val s3 = singletonSet(3)
-
+    val s4 = singletonSet(4)
 
     val u12 = union(s1, s2)
     val u23 = union(s2, s3)
     val u123 = union(u12, u23)
+    val u24 = union(s2, s4)
   }
 
   /**
@@ -150,6 +151,60 @@ class FunSetSuite extends FunSuite {
       assert(!contains(s, 1), "Filter 1")
       assert(contains(s, 2), "Filter 2")
       assert(contains(s, 3), "Filter 3")
+    }
+  }
+
+  test("forall iterates a set and checks (x >= 1 && x <=3) condition"){
+    new TestSets {
+      val s = forall(u123, x=> (x >= 1 && x <=3))
+      assert(s, "Union Set 1,2,3 contains integers 1 <= x <= 3")
+    }
+  }
+
+  test("forall iterates a set and checks (x > 4) condition"){
+    new TestSets {
+      val s = forall(u123, x=> (x > 4))
+      assert(!s)
+    }
+  }
+
+  def isEven(x:Int):Boolean = (x % 2 == 0)
+  def isOdd(x:Int):Boolean = !isEven(x)
+
+  test("forall iterates a set and checks u1234 only contains even numbers"){
+    new TestSets {
+      val s = forall(u24, x=> isEven(x))
+      assert(s, "Union set 2,4 only contains even numbers")
+    }
+  }
+
+  test("exists checks if at least one element fulfills the even condition"){
+    new TestSets {
+      val s = exists(u123, x=> isEven(x))
+      assert(s, "Union set 1,2,3 contains at least one even number")
+    }
+  }
+
+  test("exists checks if at least one element fulfills the odd condition"){
+    new TestSets {
+      val s = exists(u123, x=> isOdd(x))
+      assert(s, "Union set 1,2,3 contains at least one odd number")
+    }
+  }
+
+  test("exists checks if at least one element doesn't fulfill the odd condition"){
+    new TestSets {
+      val s = exists(u24, x=> isOdd(x))
+      assert(!s, "Union set 2,4 does not contain any odd number")
+    }
+  }
+
+  test("map transforms one set into the other by multiplying with 2"){
+    new TestSets {
+      val s = map(u24, x=> x*2)
+      assert(!contains(s, 2))
+      assert(contains(s, 4))
+      assert(contains(s, 8))
     }
   }
 
